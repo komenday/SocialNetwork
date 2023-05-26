@@ -1,12 +1,15 @@
 using Post.Cmd.Infrastructure.Config;
 using Post.Cmd.Infrastructure.Repositories;
+using Post.Cmd.Infrastructure.Stores;
 using SQRS.Core.Domain;
+using SQRS.Core.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameof(MongoDbConfig)));
 
 builder.Services.AddScoped<IEventStoreRepository, EventStoreRepository>();
+builder.Services.AddScoped<IEventStore, EventStore>();
 
 builder.Services.AddControllers();
 
