@@ -33,9 +33,10 @@ dispatcher.RegisterHandler<AddCommentCommand>(commandHandler.HandleAsync);
 dispatcher.RegisterHandler<EditCommentCommand>(commandHandler.HandleAsync);
 dispatcher.RegisterHandler<RemoveCommentComand>(commandHandler.HandleAsync);
 dispatcher.RegisterHandler<DeletePostCommand>(commandHandler.HandleAsync);
-builder.Services.AddSingleton<ICommandDispatcher, CommandDispatcher>(_ => dispatcher);
+builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
 
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

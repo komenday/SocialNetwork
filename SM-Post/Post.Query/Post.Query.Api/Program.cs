@@ -14,11 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 Action<DbContextOptionsBuilder> contextConfig = 
     o => o.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
-
-builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
-
 builder.Services.AddDbContext<DatabaseContext>(contextConfig);
 builder.Services.AddSingleton(new DatabaseContextFactory(contextConfig));
+
+var dataContext = builder.Services.BuildServiceProvider().GetRequiredService<DatabaseContext>();
+dataContext.Database.EnsureCreated();
+
+builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
 
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();

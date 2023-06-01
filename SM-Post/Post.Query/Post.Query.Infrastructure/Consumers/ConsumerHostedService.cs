@@ -21,7 +21,7 @@ public class ConsumerHostedService : IHostedService
         _logger.LogInformation("Event consumer service is running");
 
         using IServiceScope scope = _serviceProvider.CreateScope();
-        var eventConsumer = scope.ServiceProvider.GetService<IEventConsumer>();
+        var eventConsumer = scope.ServiceProvider.GetRequiredService<IEventConsumer>();
         var topic = Environment.GetEnvironmentVariable("KAFKA_TOPIC");
 
         Task.Run(() => eventConsumer.Consume(topic), cancellationToken);
@@ -32,7 +32,6 @@ public class ConsumerHostedService : IHostedService
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Event consumer service is stopped");
-
 
         return Task.CompletedTask;
     }

@@ -23,7 +23,9 @@ public class CommandDispatcher : ICommandDispatcher
         {
             await handler(command);
         }
-
-        throw new ArgumentNullException(nameof(command), "No command handler was registered");
+        else
+        {
+            throw new ArgumentNullException(nameof(command), "No command handler was registered");
+        }
     }
 }
