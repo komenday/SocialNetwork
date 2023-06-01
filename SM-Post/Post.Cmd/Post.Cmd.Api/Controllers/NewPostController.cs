@@ -35,12 +35,12 @@ public class NewPostController : ControllerBase
                 Message = "New post creation request was completed successfully"
             });
         }
-        catch (InvalidOperationException invalidOp)
+        catch (InvalidOperationException ex)
         {
-            _logger.Log(LogLevel.Warning, invalidOp, "Client made a bad request");
+            _logger.Log(LogLevel.Warning, ex, "Client made a bad request");
             return BadRequest(new BaseResponse
             {
-                Message = invalidOp.Message
+                Message = ex.Message
             });
         }
         catch (Exception ex)
