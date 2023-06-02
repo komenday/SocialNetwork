@@ -62,5 +62,7 @@ public class CommandHandler : ICommandHandler
     {
         var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
         aggregate.DeletePost(command.Username);
+
+        await _eventSourcingHandler.SaveAsync(aggregate);
     }
 }
