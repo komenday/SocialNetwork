@@ -13,11 +13,13 @@ using SQRS.Core.Infrastructure;
 using EventHandler = Post.Query.Infrastructure.Handlers.EventHandler;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSwaggerGen();
 
 // Add services to the container.
+Action<DbContextOptionsBuilder> contextConfig = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")!.Equals("Development.PostgreSQL")
+    ? o => o.UseLazyLoadingProxies().UseNpgsql(builder.Configuration.GetConnectionString("SqlServer"))
+    : o => o.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 
-Action<DbContextOptionsBuilder> contextConfig = 
-    o => o.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 builder.Services.AddDbContext<DatabaseContext>(contextConfig);
 builder.Services.AddSingleton(new DatabaseContextFactory(contextConfig));
 
@@ -44,7 +46,6 @@ dispatcher.RegisterHandler<FindPostsWithLikesQuery>(queryHandler.HandleAsync);
 builder.Services.AddSingleton<IQueryDispatcher<PostEntity>>(_ => dispatcher);
 
 builder.Services.AddControllers();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
